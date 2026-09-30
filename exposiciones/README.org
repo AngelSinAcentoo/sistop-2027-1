@@ -15,6 +15,7 @@
   | 2026.10.05 | Sistemas operativos inmutables: actualizaciones atómicas, snapshots y recuperación ante fallos | Angel Escobar y Francisco Corona                 |         |                         |                              |
   | 2026.10.05 | Planificadores de CPU basados en inteligencia artificial en Linux (=sched_ext=)                | Carlos Fernando Carballido y Raúl Haziel Sánchez |         |                         |                              |
   | 2026.10.12 | Sistemas de archivos modernos y técnicas CoW en sistemas operativos                            | Carlos Martínez y Frida Díaz                     |         |                         |                              |
+  | 2026.10.12 | Sistemas operativos en misiones espaciales                                                     | Daniel Berumen                                   |         |                         |                              |
   |------------+------------------------------------------------------------------------------------------------+--------------------------------------------------+---------+-------------------------+------------------------------|
   #+TBLFM: 
 
