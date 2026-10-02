@@ -1,0 +1,65 @@
+#+title: Evaluación de la exposición
+#+author: Gunnar Wolf
+
+* Microkernel y exokernel
+
+- Tema presentado por :: Beatriz Almaraz y Edson Barragán
+- Calificación global :: 8.54
+
+|------------------------+------+--------------------+------+---------|
+| Evaluación  compañeros | Peso | Evaluación docente | Peso | *Total* |
+|------------------------+------+--------------------+------+---------|
+|                   9.33 |  0.3 |                8.2 |  0.7 |    8.54 |
+|------------------------+------+--------------------+------+---------|
+#+TBLFM: @2$5=$1*$2+$3*$4;f-2
+
+* Evaluación grupal
+
+|              | 1 | 2 | 3 | 4 | 5 | Total |
+|--------------+---+---+---+---+---+-------|
+| Originalidad | 0 | 0 | 0 | 1 | 5 |  9.67 |
+| Nivel        | 0 | 0 | 0 | 2 | 4 |  9.33 |
+| Relevancia   | 0 | 0 | 0 | 1 | 5 |  9.67 |
+| Claridad     | 0 | 0 | 1 | 1 | 4 |  9.00 |
+| Presencia    | 0 | 0 | 1 | 1 | 4 |  9.00 |
+|--------------+---+---+---+---+---+-------|
+|              |   |   |   |   |   |  9.33 |
+#+TBLFM: @2$7..@6$7=10 * (0.2*$2 + 0.4*$3 + 0.6*$4 + 0.8*$5 + $6 ) / vsum($2..$6); f-2::@7$7=vmean(@2$7..@6$7); f-2
+
+** Comentarios de los compañeros
+- La verdad estuvo muy bien, el diseño de la presentación es atractivo, el
+  tema es llamativo y la información es clara y concisa. :)
+- Me pareció muy interesante el tema
+- Todo estuvo muy bien, pero siento que en cuanto sus voces suenan muy
+  neutras, apagadas, cuando se busca transmitir algo a alguien más, ayuda
+  mucho cuando se le escucha con entusiasmo y energía a la otra persona, es
+  algo importante, pienso yo, en la parte de exponer algo y en general
+  también, porque aplica también en trabajos en equipo, proyectos, etc.
+
+* Evaluación por parte del docente
+
+| *Aspecto*                          | *Peso* | *Evaluación* | *Puntos* |
+|------------------------------------+--------+--------------+----------|
+| Contenido técnico y profundidad    |    0.3 |            7 |      2.1 |
+| Fuentes bibliográficas             |   0.15 |           10 |      1.5 |
+| Organización                       |   0.15 |            7 |     1.05 |
+| Comunicación oral y uso del tiempo |   0.25 |           10 |      2.5 |
+| Uso de recursos visuales           |   0.15 |            7 |     1.05 |
+|------------------------------------+--------+--------------+----------|
+| *Global*                           |        |              |     8.20 |
+#+TBLFM: @<<$4..@>>$4=$2*$3::$4=vsum(@<<..@>>);f-2
+
+** Comentarios
+- El ritmo con el que hablaron durante la exposición muestra que iban,
+  mayormente, leyendo el material. Intenten /guiarse/ por las láminas
+  desarrolladas, y depender menos de un /acordeón/ del cual ir leyendo; el
+  resultado es mucho mas natural, y conectan mejor con quien los escucha.
+- Si bien es necesario situar el material en un contexto, me parece que le
+  dedicaron un poco demasiado tiempo a repasar el material que ya habíamos
+  visto en clase, y le dedicaron muy poco tiempo a explicar el concepto de
+  Exokernel y de LibOS
+  - Da a entender que lo vieron a nivel “enunciativo”, pero no han
+    utilizado uno, ni han visto su código fuente.
+  - Ojo: ¿un sistema operativo del... siglo XVIII (1700-1799)? ¿Cuando la
+    primera computadora electrónica es de los 1940s, y los primeros
+    sistemas operativos de los 1950s? 🤔
