@@ -7,9 +7,12 @@ Integrantes:
 - Angel Emiliano Escobar Hernández — GitHub: AngelSinAcentoo.
 - Francisco Corona.
 
-Materia: Sistemas Operativos, Facultad de Ingeniería, UNAM.  
-Profesor: Gunnar Wolf.  
-Semestre: 2027-1.  
+Materia: Sistemas Operativos, Facultad de Ingeniería, UNAM.
+
+Profesor: Gunnar Wolf.
+
+Semestre: 2027-1.
+
 Fecha de exposición: 5 de octubre de 2026.
 
 ## Material de la exposición
