@@ -1,0 +1,99 @@
+name: Prueba tarea 2
+on: [push, workflow_dispatch]
+
+jobs:
+  prueba:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      P: tareas/2/CoronaFrancisco-EscobarAngel/archivos_recientes.py
+      LANG: C.UTF-8
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Preparar directorio de prueba
+        run: |
+          whoami; python3 --version
+          mkdir t && cd t
+          echo hola > b.txt; echo x > Zeta; echo r > README.md
+          echo e > 'con espacios.txt'; echo n > ñandú.txt; echo s > secreto.txt
+          mkdir subdir; echo v > viejo.txt
+          ln -s b.txt liga_archivo; ln -s subdir liga_dir; ln -s no_existe liga_rota
+          ln -s viejo.txt liga_a_viejo; ln -s b.txt liga_vieja
+          python3 -c "
+          import os, time
+          t = time.time() - 10 * 86400
+          os.utime('viejo.txt', (t, t))
+          os.utime('liga_vieja', (t, t), follow_symlinks=False)
+          "
+          chmod 000 secreto.txt
+          cd .. && mkdir sinx sinr && touch sinx/a && chmod 600 sinx && chmod 000 sinr
+          ls -la t
+
+      - name: Corre como ejecutable con el shebang
+        run: ./$P t 1 | tee salida.txt
+
+      - name: Nombres correctos y en orden lexicografico
+        run: |
+          sed -n '3,/^$/p' salida.txt | sed '/^$/d' | cut -c1-30 | sed 's/ *$//' > nombres.txt
+          printf '%s\n' README.md Zeta b.txt 'con espacios.txt' liga_a_viejo liga_archivo liga_dir liga_rota secreto.txt subdir ñandú.txt > esperado.txt
+          diff esperado.txt nombres.txt
+
+      - name: Liga vieja y archivo viejo no aparecen
+        run: "! grep -E '^(viejo.txt|liga_vieja) ' salida.txt"
+
+      - name: Ligas se muestran como ligas (lstat)
+        run: |
+          grep -E '^liga_archivo +[0-9-]+ [0-9:]+ 120[0-7]{3} l[rwx-]{9} 5$' salida.txt
+          grep -E '^liga_rota +[0-9-]+ [0-9:]+ 120[0-7]{3} l[rwx-]{9} 9$' salida.txt
+          grep -E '^liga_dir +[0-9-]+ [0-9:]+ 120[0-7]{3} l' salida.txt
+
+      - name: Modos y permisos reales
+        run: |
+          grep -E '^b.txt +[0-9-]+ [0-9:]+ 100644 -rw-r--r-- 5$' salida.txt
+          grep -E '^secreto.txt +[0-9-]+ [0-9:]+ 100000 ---------- 2$' salida.txt
+          grep -E '^subdir +[0-9-]+ [0-9:]+ 040755 drwxr-xr-x ' salida.txt
+          grep -F '11 archivos' salida.txt
+
+      - name: Directorio sin permiso de ejecucion (stat falla por entrada)
+        run: |
+          set +e
+          ./$P sinx 1 > out.txt 2> err.txt; rc=$?
+          cat out.txt err.txt
+          [ $rc -eq 0 ] && grep -q 'No se pudo leer a: Permission denied' err.txt && grep -q '^0 archivos' out.txt && ! grep -q Traceback err.txt
+
+      - name: Directorio sin permiso de lectura
+        run: |
+          set +e
+          ./$P sinr 1 > out.txt 2> err.txt; rc=$?
+          cat out.txt err.txt
+          [ $rc -eq 1 ] && grep -q 'No se pudo abrir sinr: Permission denied' err.txt && ! grep -q Traceback err.txt
+
+      - name: Argumentos invalidos
+        run: |
+          set +e
+          for args in "" "t" "t abc" "t -1" "t nan" "t inf" "/no/existe 2" "t 1 extra"; do
+            ./$P $args > out.txt 2> err.txt; rc=$?
+            echo "[$args] rc=$rc"; cat out.txt
+            [ $rc -eq 1 ] && grep -q 'Invocación' out.txt && ! grep -q Traceback err.txt || exit 1
+          done
+
+      - name: Dias con decimales y ejemplo del enunciado
+        run: |
+          ./$P t 0.5 | tail -1
+          ./$P /tmp/ 1
+
+      - uses: actions/setup-python@v5
+        if: runner.os == 'Linux'
+        with:
+          python-version: '3.9'
+
+      - name: Python 3.9
+        if: runner.os == 'Linux'
+        run: python --version && python $P t 1 | grep -F '11 archivos'
