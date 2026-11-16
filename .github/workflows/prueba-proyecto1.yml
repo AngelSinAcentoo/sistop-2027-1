@@ -45,4 +45,5 @@ jobs:
           printf 'XXXX' | dd of=prueba.img bs=1 seek=0 conv=notrunc
           ! python3 fiunamfs.py prueba.img
       - name: El repositorio queda limpio
-        run: test -z "$(git status --porcelain)"
+        # Solo esta carpeta: el repo de la clase tiene rutas que chocan en macOS por mayusculas
+        run: test -z "$(git status --porcelain .)"
