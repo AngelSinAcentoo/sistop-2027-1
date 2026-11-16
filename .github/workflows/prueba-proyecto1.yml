@@ -1,0 +1,48 @@
+name: prueba-proyecto1
+on:
+  push:
+    branches: [prueba-proyecto1]
+jobs:
+  prueba:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: proyectos/1/CoronaFrancisco-EscobarAngel
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 --version
+      - name: Instrucciones del README
+        run: |
+          cp ../fiunamfs.img prueba.img
+          printf '1\n2\nmensaje.jpg\n\n2\nlogo.png\n\n2\nREADME.org\n\n5\n' | ./fiunamfs.py prueba.img | tee salida.txt
+          grep -q '3 archivos' salida.txt
+      - name: Archivos extraidos
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          esperado = {
+              'mensaje.jpg': '45e08ffc06e1cf63122d9dddcd0fee97dd8ddbec683d8ecae961211753c7b080',
+              'logo.png': 'df9f70aeddcbb7c431990dfa3b21a243309ad6b97bb84206af9d456035240e0b',
+              'README.org': 'b049f86f689cbaddc60d4fe975660eafbf3bc65bc81f6c426869ac0013dbf04f',
+          }
+          for nombre, h in esperado.items():
+              assert hashlib.sha256(open(nombre, 'rb').read()).hexdigest() == h, nombre
+          print('ok')
+          PY
+      - name: Ida y vuelta, borrar, sin espacio y validacion
+        run: |
+          head -c 300000 /dev/urandom > grande.bin
+          head -c 1500000 /dev/urandom > enorme.bin
+          printf 'hola\n' > nota.txt
+          printf '3\ngrande.bin\n3\nnota.txt\n3\nenorme.bin\n4\nlogo.png\ns\n2\ngrande.bin\ng2.bin\n2\nnota.txt\nn2.txt\n1\n5\n' | python3 fiunamfs.py prueba.img | tee salida2.txt
+          cmp grande.bin g2.bin
+          cmp nota.txt n2.txt
+          grep -q 'No hay espacio contiguo' salida2.txt
+          ! grep -q 'logo.png  ' salida2.txt
+          printf 'XXXX' | dd of=prueba.img bs=1 seek=0 conv=notrunc
+          ! python3 fiunamfs.py prueba.img
+      - name: El repositorio queda limpio
+        run: test -z "$(git status --porcelain)"
