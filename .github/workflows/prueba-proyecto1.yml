@@ -44,6 +44,19 @@ jobs:
           ! grep -q 'logo.png  ' salida2.txt
           printf 'XXXX' | dd of=prueba.img bs=1 seek=0 conv=notrunc
           ! python3 fiunamfs.py prueba.img
+      - name: Imagen de solo lectura y superbloque truncado
+        timeout-minutes: 2
+        run: |
+          cp ../fiunamfs.img ro.img
+          chmod a-w ro.img
+          printf '1
+5
+' | python3 fiunamfs.py ro.img | tee s3.txt || true
+          grep -q 'No se puede abrir' s3.txt
+          head -c 30 ../fiunamfs.img > corta.img
+          python3 fiunamfs.py corta.img 2>&1 | tee s4.txt || true
+          grep -q 'no es un FiUnamFS' s4.txt
+          ! grep -q Traceback s4.txt
       - name: El repositorio queda limpio
         # Solo esta carpeta: el repo de la clase tiene rutas que chocan en macOS por mayusculas
         run: test -z "$(git status --porcelain .)"
