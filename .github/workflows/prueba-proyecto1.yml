@@ -49,9 +49,7 @@ jobs:
         run: |
           cp ../fiunamfs.img ro.img
           chmod a-w ro.img
-          printf '1
-5
-' | python3 fiunamfs.py ro.img | tee s3.txt || true
+          printf '1\n5\n' | python3 fiunamfs.py ro.img | tee s3.txt || true
           grep -q 'No se puede abrir' s3.txt
           head -c 30 ../fiunamfs.img > corta.img
           python3 fiunamfs.py corta.img 2>&1 | tee s4.txt || true
